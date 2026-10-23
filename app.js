@@ -56,7 +56,7 @@ app.use('/inventory', require('./inventory/inventoryRoutes'));
 
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
-app.get('/debug-push/:appointmentId?', async (req, res) => {
+const debugPushHandler = async (req, res) => {
   const pool = require('./db');
   const { tokensForUser, notifyAppointmentOwner } = require('./utils/push');
   try {
@@ -113,7 +113,9 @@ app.get('/debug-push/:appointmentId?', async (req, res) => {
   } catch (e) {
     return res.status(500).json({ error: e.message, stack: e.stack });
   }
-});
+};
+app.get('/debug-push', debugPushHandler);
+app.get('/debug-push/:appointmentId', debugPushHandler);
 
 // Public legal pages (also satisfy Google OAuth publishing, which requires
 // an app homepage, privacy policy and terms on an authorized domain).
